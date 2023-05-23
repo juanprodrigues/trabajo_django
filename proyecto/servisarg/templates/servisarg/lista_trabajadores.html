@@ -1,0 +1,29 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+
+{ {% block css_adicionales %}
+<link rel="stylesheet" href="{% static 'servisarg\css\lista_trabajadores.css' %}">
+{% endblock %}}
+
+
+{%block titulo%}Listado de Trabajadores {% endblock %}
+{% block encabezado %}
+
+    <h1>Listado de Trabajadores</h1>
+{% endblock %}
+{% block contenido %}  
+    <section class="lista">
+        {% for trabajador in listado_trabajadores%}
+            <article>
+                <p>Nombre: {{trabajador.nombre}}</p>
+                <p>Apellido: {{trabajador.apellido}} </p>
+                <p>Oficio: {{trabajador.oficio}} </p>
+                <p>Área de trabajo: {{trabajador.direccion}}</p>
+            </article>
+    
+        {% empty %}
+            <article class="article">No existen trabajadores</article>
+        {% endfor %}
+    </section>
+    
+{% endblock %}

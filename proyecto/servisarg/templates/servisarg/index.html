@@ -1,0 +1,36 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+
+{ {% block css_adicionales %}
+<link rel="stylesheet" href="{% static 'servisarg\css\inicio.css' %}">
+{% endblock %}}
+
+{%block titulo%}ServisArg{% endblock %}
+{% block encabezado %}
+<img src="{% static 'servisarg/img/images.jpeg'%}" alt="Logo">
+    <h1>ServisArg</h1>
+    <p>Bienvenido </p>
+{% endblock %}
+
+{% block contenido %}
+
+    <section>
+        <h2>Lista de trabajadores</h2>
+        {% for worker in worker_list %}
+            <article>
+                <p>Nombre: {{worker.nombre}}</p>
+                <p>Apellido:{{worker.apellido}} </p>
+                <p>Oficio:{{worker.oficio}} </p>
+                <p>Área de residencia: {{worker.direccion}}</p>
+            </article>
+        {% empty%}
+            <p>No hay trabajadores dados de alta</p>
+        {% endfor%}
+    </section>  
+{% endblock %}
+
+        
+
+
+
+

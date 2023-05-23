@@ -1,0 +1,12 @@
+.campos{
+    background-color: lightblue ;
+}
+.rojo {
+    color: red
+}
+body{
+    background-color: lightgray;
+}
+.area_texto{
+    resize: none;
+}
