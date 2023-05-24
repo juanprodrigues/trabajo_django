@@ -8,13 +8,13 @@
 {%block titulo%}ServisArg{% endblock %}
 {% block encabezado %}
     <h1>Bienvenido a ServisArg</h1>
-    <p>Categirias de Oficios </p>
+    <h2>Categorias de Oficios </h2>
 {% endblock %}
 
 {% block contenido %}
    
-    <section>
-        <h2>Lista de Categorias</h2>
+    <section class="lista">
+        <h2>Categorias</h2>
         {% for categoria in lista_categorias %}
             <article>
                 <p><b>{{categoria.nombre}}</b></p>

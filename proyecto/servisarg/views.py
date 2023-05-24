@@ -52,7 +52,7 @@ def categorias(request):
     
     context = {}
     
-    lista_categorias = Oficio.objects.all()
+    lista_categorias = Oficio.objects.all().order_by("nombre")
     
     context["lista_categorias"] = lista_categorias
     

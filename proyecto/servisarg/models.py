@@ -8,9 +8,9 @@ class Persona(models.Model):
     fecha_nacimiento = models.DateField(verbose_name = "Fecha de Nacimiento")
     dni = models.IntegerField(verbose_name = "DNI",unique=True)
     direccion = models.CharField(max_length =250 , verbose_name="Dirección")
-    telefono = models.IntegerField(verbose_name = "Telefono",unique=True )
+    telefono = models.IntegerField( verbose_name = "Telefono",unique=True )
     email =models.EmailField(verbose_name = "Email", unique=True)
-    clave = models.CharField(verbose_name = "Contraseña")
+    clave = models.CharField(max_length= 20 ,verbose_name = "Contraseña")
     
     class Meta:
         abstract = True
@@ -28,8 +28,8 @@ class Trabajador(Persona):
     descripcion = models.TextField(max_length=700, verbose_name="Descripción")
 
 class Contacto(models.Model):
-    nombre = models.CharField(verbose_name= "Nombre")
-    apellido = models.CharField(verbose_name="Apellido")    
+    nombre = models.CharField(max_length = 100, verbose_name= "Nombre")
+    apellido = models.CharField(max_length = 100, verbose_name="Apellido")    
     email =models.EmailField(verbose_name="Email")
     fecha_consulta = models.DateField(verbose_name = "Fecha de consulta")
     tipo = models.CharField(verbose_name= "tipo de contacto")

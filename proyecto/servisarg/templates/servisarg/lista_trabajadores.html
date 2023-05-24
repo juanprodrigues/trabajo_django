@@ -9,7 +9,7 @@
 {%block titulo%}Listado de Trabajadores {% endblock %}
 {% block encabezado %}
 
-    <h1>Listado de Trabajadores</h1>
+    <h1>Trabajadores</h1>
 {% endblock %}
 {% block contenido %}  
     <section class="lista">
@@ -18,6 +18,7 @@
                 <p>Nombre: {{trabajador.nombre}}</p>
                 <p>Apellido: {{trabajador.apellido}} </p>
                 <p>Oficio: {{trabajador.oficio}} </p>
+                <p>Telefono: {{trabajador.telefono}}</p>
                 <p>Área de trabajo: {{trabajador.direccion}}</p>
             </article>
     

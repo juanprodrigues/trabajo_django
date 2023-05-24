@@ -6,16 +6,9 @@ TYPE_CHOICES = [
     ("sugerencia", "Sugerencia")
 ]
 
-OFICIO = [
-      ("electricista", "Electricista"),
-      ("plomero", "Plomero"),
-      ("cerrajero", "Cerrajero"),
-      ("albañil", "Albañil"),
-
-]
-
 class TrabajadorForm(forms.ModelForm):
     fecha_nacimiento = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    dni = forms.IntegerField(max_value=999999999)
     clave = forms.CharField(widget=forms.PasswordInput)
     oficio = oficio = forms.ModelChoiceField(queryset=Oficio.objects.all())
     class Meta:
