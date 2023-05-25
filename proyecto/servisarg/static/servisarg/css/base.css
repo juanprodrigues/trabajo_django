@@ -1,3 +1,7 @@
 body{
-    background-color: lightgrey;
-} 
+    background-color: lightskyblue;
+}
+.li{border-bottom: none;
+    text-decoration: none;
+
+}
