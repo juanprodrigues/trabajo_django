@@ -1,0 +1,16 @@
+.article{
+    color: red;
+}
+.lista{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+article{
+    background-color: lightyellow;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    flex: 1
+    ;
+}

@@ -12,22 +12,21 @@
 {% endblock %}
 
 {% block contenido %}
-
-    <section>
-        <h2>Lista de trabajadores</h2>
-        {% for worker in worker_list %}
+   
+    <section class="lista">
+        <h2>Categorias de Oficios</h2>
+        {% for categoria in lista_categorias %}
             <article>
-                <p>Nombre: {{worker.nombre}}</p>
-                <p>Apellido:{{worker.apellido}} </p>
-                <p>Oficio:{{worker.oficio}} </p>
-                <p>Área de residencia: {{worker.direccion}}</p>
+                <p><b><a href="{% url 'trabajadores_categoria' categoria.id %}">{{ categoria.nombre }}</a></b></p>
+            
             </article>
         {% empty%}
-            <p>No hay trabajadores dados de alta</p>
+            <p>No hay trabajadores en la categoria seleccionada</p>
         {% endfor%}
     </section>  
 {% endblock %}
 
+  
         
 
 

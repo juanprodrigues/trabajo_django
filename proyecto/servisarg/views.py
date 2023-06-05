@@ -6,24 +6,25 @@ from .models import Trabajador, Oficio
 # Create your views here.
 
 def index(request):
+        
+    contex = {}
     
-    #información ficticia
-    customer = {
-        'first_name': 'Mauricio',
-        'last_name': 'Rodriguez',
-        'age': '20',
-        'area': 'Flores, CABA',
-        'valid': False
-        
-        
-    }
-    worker_list = Trabajador.objects.all()
-    contex = {
-        'simulated_customer':customer,
-        'worker_list' : worker_list
-        
-    }
+    lista_categorias = Oficio.objects.all().order_by("nombre")
+    
+    contex["lista_categorias"] = lista_categorias
+
     return render(request,'servisarg/index.html', contex)
+
+def trabajadores_categoria(request, categoria_id):
+    context = {}
+    
+    categoria = Oficio.objects.get(id=categoria_id)
+    trabajadores = Trabajador.objects.filter(oficio=categoria).order_by("nombre")
+    
+    context["categoria"] = categoria
+    context["trabajadores"] = trabajadores
+    
+    return render(request, 'servisarg/trabajadores_categoria.html', context)
 
 def acerca(request):
     return HttpResponse("<h1><br>Acerca de</h1>")
@@ -48,15 +49,8 @@ def lista_trabajadores(request):
     
     return render(request, 'servisarg/lista_trabajadores.html',context)
 
-def categorias(request):
-    
-    context = {}
-    
-    lista_categorias = Oficio.objects.all().order_by("nombre")
-    
-    context["lista_categorias"] = lista_categorias
-    
-    return render(request, 'servisarg/categorias.html',context)
+
+
 
 def contacto(request):
     if request.method == "POST":
