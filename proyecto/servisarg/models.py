@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator
 
 # Create your models here.
 
@@ -8,7 +9,7 @@ class Persona(models.Model):
     fecha_nacimiento = models.DateField(verbose_name = "Fecha de Nacimiento")
     dni = models.IntegerField(verbose_name = "DNI",unique=True)
     direccion = models.CharField(max_length =250 , verbose_name="Dirección")
-    telefono = models.IntegerField( verbose_name = "Telefono",unique=True )
+    telefono = models.IntegerField( verbose_name = "Telefono",unique=True, validators=[MaxValueValidator(9999999999)])
     email =models.EmailField(verbose_name = "Email", unique=True)
     clave = models.CharField(max_length= 20 ,verbose_name = "Contraseña")
     
@@ -32,8 +33,8 @@ class Contacto(models.Model):
     apellido = models.CharField(max_length = 100, verbose_name="Apellido")    
     email =models.EmailField(verbose_name="Email")
     fecha_consulta = models.DateField(verbose_name = "Fecha de consulta")
-    tipo = models.CharField(verbose_name= "tipo de contacto")
-    mensaje = models.CharField(verbose_name ="Mensaje")
+    tipo = models.CharField(max_length = 100,verbose_name= "tipo de contacto")
+    mensaje = models.CharField(max_length = 100,verbose_name ="Mensaje")
     
     
 

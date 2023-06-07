@@ -74,12 +74,26 @@ WSGI_APPLICATION = "proyecto.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# credenciales Luwpin
+
+# DATABASES ={
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "trabajo_django",
+#         "USER": "postgres",
+#         "PASSWORD": "lupwin1404",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+
+# credenciales Juan
 DATABASES ={
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "trabajo_django",
         "USER": "postgres",
-        "PASSWORD": "lupwin1404",
+        "PASSWORD": "root",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }

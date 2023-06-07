@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import TrabajadorForm, ContactoForm
+from .forms import TrabajadorForm, ContactoForm, OficioForm
 from .models import Trabajador, Oficio
 # Create your views here.
 
@@ -27,7 +27,7 @@ def trabajadores_categoria(request, categoria_id):
     return render(request, 'servisarg/trabajadores_categoria.html', context)
 
 def acerca(request):
-    return HttpResponse("<h1><br>Acerca de</h1>")
+    return render(request,'servisarg/acerca.html')
 
 def alta_trabajador(request):
     if request.method == "POST":
@@ -63,3 +63,34 @@ def contacto(request):
         contacto_form = ContactoForm()
     contex = {'form': contacto_form}
     return render(request, 'servisarg/contacto.html', contex)
+
+
+def alta_oficio(request):
+    if request.method == "POST":
+        alta_oficio_form = OficioForm(request.POST) 
+        if alta_oficio_form.is_valid():
+            alta_oficio_form.save()  #  guarda automáticamente el trabajador
+            messages.success(request, 'Usuario dado de alta exitosamente') 
+            return redirect("categorias")
+    else:
+        alta_oficio_form = OficioForm()
+    contex = {'form': alta_oficio_form}
+    return render(request, 'servisarg/alta_oficio.html', contex)
+
+def trabajador_detalle(request, id):
+    # Obtener el trabajador correspondiente al ID
+    trabajador = Trabajador.objects.get(id=id)
+    print(Trabajador)
+    # Pasar el trabajador a la plantilla para mostrar la información
+    context = {'trabajador': trabajador}
+    return render(request, 'servisarg/trabajador_detalle.html', context)
+
+def categorias(request):
+    
+    context = {}
+    
+    lista_categorias = Oficio.objects.all().order_by("nombre")
+    
+    context["lista_categorias"] = lista_categorias
+    
+    return render(request, 'servisarg/categorias.html',context)
