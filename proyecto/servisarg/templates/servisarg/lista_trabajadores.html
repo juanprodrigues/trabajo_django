@@ -9,7 +9,7 @@
 
 {% block contenido %}
 <div class="container">
-  <h1 class="mt-4">Trabajadores</h1>
+  <h1 class="mt-4 text-center">Trabajadores</h1>
   <div class="row">
     {% for trabajador in listado_trabajadores %}
     <div class="col-md-4 mb-4">
@@ -36,4 +36,20 @@
     {% endfor %}
   </div>
 </div>
+<style>
+  a {
+    text-decoration: none;
+    /* Elimina el subrayado */
+    color: #333;
+    /* Cambia el color del texto */
+    cursor: pointer;
+    /* Cambia el cursor al pasar el mouse */
+}
+
+a:hover,
+a:focus {
+    background-color: #f2f2f2;
+    /* Color de fondo al pasar el mouse o enfocar */
+}
+</style>
 {% endblock %}
