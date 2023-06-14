@@ -5,6 +5,9 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 # Recuerda ejecutar las migraciones después de agregar estos cambios a tus modelos:
+## Me funciona en este orden...
+# py manage.py makemigrations servisarg
+# py manage.py migrate servisarg
 # py manage.py makemigrations
 # py manage.py migrate
 
@@ -45,7 +48,8 @@ class Trabajador(AbstractUser):
         Oficio, on_delete=models.SET_NULL, null=True, related_name='trabajadores'
     )
     descripcion = models.TextField(max_length=700, verbose_name="Descripción")
-    # password = models.DateField(default=datetime.now)
+    tipo_usuario = models.CharField(max_length =250 , verbose_name="Tipo de Usuario")
+    foto = models.ImageField(upload_to='trabajador_photos/', blank=True, null=True)
     groups = models.ManyToManyField(
         Group,
         verbose_name='groups',
@@ -60,6 +64,7 @@ class Trabajador(AbstractUser):
         help_text='Specific permissions for this user.',
         related_name='trabajador_user_permissions'  # Cambia el nombre del acceso inverso
     )
+
 class Contacto(models.Model):
     nombre = models.CharField(max_length = 100, verbose_name= "Nombre")
     apellido = models.CharField(max_length = 100, verbose_name="Apellido")    
@@ -96,70 +101,3 @@ class ContenidoMensaje(models.Model):
         return self.contenido
 
     
-
-#     # Resto de los campos del modelo Trabajador
-
-# class CustomGroup(Group):
-#     # Agrega campos personalizados si es necesario
-
-#     class Meta:
-#         proxy = True
-#         verbose_name = 'Custom Group'
-#         verbose_name_plural = 'Custom Groups'
-
-# class CustomPermission(Permission):
-#     # Agrega campos personalizados si es necesario
-
-#     class Meta:
-#         proxy = True
-#         verbose_name = 'Custom Permission'
-#         verbose_name_plural = 'Custom Permissions'
-
-
-
-# ----------------------------------------------------------
-# from django.db import models
-# from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group, Permission,PermissionsMixin
-
-# class CustomUserManager(BaseUserManager):
-#     def create_user(self, email, password=None, **extra_fields):
-#         if not email:
-#             raise ValueError('El email debe ser proporcionado')
-#         email = self.normalize_email(email)
-#         user = self.model(email=email, **extra_fields)
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         return user
-
-#     def create_superuser(self, email, password=None, **extra_fields):
-#         extra_fields.setdefault('is_staff', True)
-#         extra_fields.setdefault('is_superuser', True)
-#         return self.create_user(email, password, **extra_fields)
-# class CustomUser(AbstractBaseUser, PermissionsMixin):
-#     email = models.EmailField(unique=True)
-#     first_name = models.CharField(max_length=30)
-#     last_name = models.CharField(max_length=30)
-#     is_active = models.BooleanField(default=True)
-#     is_staff = models.BooleanField(default=False)
-#     groups = models.ManyToManyField(Group, related_name='custom_users', blank=True)
-#     user_permissions = models.ManyToManyField(Permission, related_name='custom_users', blank=True)
-
-#     objects = CustomUserManager()
-
-#     USERNAME_FIELD = 'email'
-#     # Otros campos requeridos
-
-#     class Meta:
-#         verbose_name = 'Usuario personalizado'
-#         verbose_name_plural = 'Usuarios personalizados'
-
-#     def __str__(self):
-#         return self.email
-
-# class CustomGroup(Group):
-#     class Meta:
-#         proxy = True
-
-# class CustomPermission(Permission):
-#     class Meta:
-#         proxy = True

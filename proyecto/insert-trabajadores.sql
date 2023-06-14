@@ -1,10 +1,23 @@
 -- insert de Oficios
-INSERT INTO public.servisarg_oficio(
-	 nombre)
-	VALUES
-	('Carpinteria'),
-	('Cerrajero'),
-	('Albañil')
+
+INSERT INTO public.servisarg_oficio (id, nombre)
+VALUES
+    (1, 'Cosinero'),
+    (2, 'Electricista'),
+    (3, 'Plomero'),
+    (4, 'Pintor'),
+    (5, 'Jardinero'),
+    (6, 'Limpieza de hogar'),
+    (7, 'Instalador de aire acondicionado'),
+    (8, 'Reparación de electrodomésticos'),
+    (9, 'Fontanero'),
+    (10, 'Mudanzas'),
+    (11, 'Gasista'),
+    (12, 'Cuidador de mascotas'),
+    (13, 'Decorador de interiores'),
+    (14, 'Reparación de computadoras'),
+    (15, 'Organizador profesional'),
+    (16, 'Diseñador gráfico');
 -- insert de trabajadores	
 INSERT INTO public.servisarg_trabajador(
     id, nombre, apellido, fecha_nacimiento, dni, direccion, telefono, email, clave, descripcion, oficio_id

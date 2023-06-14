@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect ,get_object_or_404
+
 from django.http import HttpResponse
 from .forms import TrabajadorForm, ContactoForm, OficioForm
 from .models import Trabajador, Oficio
@@ -29,13 +30,24 @@ def trabajadores_categoria(request, categoria_id):
 
 def acerca(request):
     return render(request,'servisarg/acerca.html')
+from django.contrib.auth.decorators import user_passes_test
 
+def trabajador_o_admin(user):
+    print(user)
+    # autorizado=user.is_staff or Trabajador.objects.filter(username=user).exists()
+    autorizado=True
+    print(autorizado)
+    return autorizado
+from django.conf import settings
+
+@user_passes_test(trabajador_o_admin, login_url='login')
 def alta_trabajador(request):
+    print(settings.MEDIA_URL)
     if request.method == "POST":
         alta_trabajador_form = TrabajadorForm(request.POST, user=request.user) 
-        if alta_trabajador_form.is_valid:
-            trabajador=alta_trabajador_form.save()  #  guarda automáticamente el trabajador
-            # print(trabajador)
+        print('trabajador', alta_trabajador_form.is_valid())
+        if alta_trabajador_form.is_valid():
+            trabajador=alta_trabajador_form.save(request=request)  #  guarda automáticamente el trabajador
             messages.success(request, 'Usuario dado de alta exitosamente') 
             return redirect("lista_trabajadores")
     else:
@@ -48,7 +60,7 @@ def lista_trabajadores(request):
     
     listado_trabajadores = Trabajador.objects.all().order_by("oficio")
     context["listado_trabajadores"] = listado_trabajadores
-    
+    context['media_url']= settings.MEDIA_URL
     return render(request, 'servisarg/lista_trabajadores.html',context)
 
 
@@ -67,17 +79,7 @@ def contacto(request):
     return render(request, 'servisarg/contacto.html', contex)
 
 
-def alta_oficio(request):
-    if request.method == "POST":
-        alta_oficio_form = OficioForm(request.POST) 
-        if alta_oficio_form.is_valid():
-            alta_oficio_form.save()  #  guarda automáticamente el trabajador
-            messages.success(request, 'Usuario dado de alta exitosamente') 
-            return redirect("categorias")
-    else:
-        alta_oficio_form = OficioForm()
-    contex = {'form': alta_oficio_form}
-    return render(request, 'servisarg/alta_oficio.html', contex)
+
 
 def trabajador_detalle(request, id):
     # Obtener el trabajador correspondiente al ID
@@ -87,22 +89,14 @@ def trabajador_detalle(request, id):
     context = {'trabajador': trabajador}
     return render(request, 'servisarg/trabajador_detalle.html', context)
 
-def categorias(request):
-    
-    context = {}
-    
-    lista_categorias = Oficio.objects.all().order_by("nombre")
-    
-    context["lista_categorias"] = lista_categorias
-    
-    return render(request, 'servisarg/categorias.html',context)
+
 from django.contrib.auth.forms import UserCreationForm
 def register_user(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user=form.save()
-            return redirect('contacto')  # Redirige al usuario a la página de inicio de sesión
+            return redirect('login')  # Redirige al usuario a la página de inicio de sesión
     else:
         form = UserCreationForm()
     return render(request, 'servisarg/register.html', {'form': form})
@@ -134,3 +128,51 @@ def user_login(request):
         'mensa':mensaje_error
     }
     return render(request, 'servisarg/login.html', context)
+
+
+# alta oficio
+def alta_oficio(request):
+    if request.method == "POST":
+        alta_oficio_form = OficioForm(request.POST) 
+        if alta_oficio_form.is_valid():
+            alta_oficio_form.save()  #  guarda automáticamente el trabajador
+            messages.success(request, 'Usuario dado de alta exitosamente') 
+            return redirect('listar_oficios')
+    else:
+        alta_oficio_form = OficioForm()
+    contex = {'form': alta_oficio_form}
+    return render(request, 'servisarg/alta_oficio.html', contex)
+# listar todos las categorias
+def categorias(request):
+    
+    context = {}
+    
+    lista_categorias = Oficio.objects.all().order_by("nombre")
+    
+    context["lista_categorias"] = lista_categorias
+    
+    return render(request, 'servisarg/categorias.html',context)
+def listar_oficios(request):
+    oficios = Oficio.objects.all()
+    return render(request, 'servisarg/categoria/listar.html', {'oficios': oficios})
+
+
+def modificar_oficio(request, oficio_id):
+    oficio = Oficio.objects.get(id=oficio_id)
+    if request.method == 'POST':
+        form = OficioForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            oficio.nombre = nombre
+            oficio.save()
+            return redirect('listar_oficios')
+    else:
+        form = OficioForm(initial={'nombre': oficio.nombre})
+        form.fields['nombre'].widget.attrs['placeholder'] = oficio.nombre  # Agregar placeholder
+    return render(request, 'servisarg/alta_oficio.html', {'form': form, 'oficio': oficio})
+
+
+def eliminar_oficio(request, oficio_id):
+    oficio = Oficio.objects.get(id=oficio_id)
+    oficio.delete()
+    return redirect('listar_oficios')

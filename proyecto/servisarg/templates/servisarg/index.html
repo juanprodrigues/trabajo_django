@@ -7,24 +7,58 @@
 
 {%block titulo%}ServisArg{% endblock %}
 {% block encabezado %}
-    <h1>ServisArg</h1>
-    <h2>Bienvenido </h2>
+    <h1 class="text-center">Bienvenido ServisArg </h1>
 {% endblock %}
 
 {% block contenido %}
+<section class="lista">
+    <h2>Categorías de Oficios</h2>
 
-    <section class="lista">
-        <h2>Categorias de Oficios</h2>
+    {% for categoria in lista_categorias %}
+        <article class="categoria-card">
+            <a href="{% url 'trabajadores_categoria' categoria.id %}">
+                <div class="categoria-circle">
+                    <span>{{ categoria.nombre }}</span>
+                </div>
+            </a>
+        </article>
+    {% empty %}
+        <p>No hay trabajadores en la categoría seleccionada</p>
+    {% endfor %}
+</section>
 
-        {% for categoria in lista_categorias %}
-            <article>
-                <p><b><a href="{% url 'trabajadores_categoria' categoria.id %}">{{ categoria.nombre }}</a></b></p>
-            
-            </article>
-        {% empty%}
-            <p>No hay trabajadores en la categoria seleccionada</p>
-        {% endfor%}
-    </section>  
+
+
+<style>
+article {
+    background-color: #f5deb300;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px;
+}
+.categoria-card {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+}
+
+.categoria-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #eaeaea;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.categoria-circle span {
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+}
+
+</style>
 {% endblock %}
 
         

@@ -15,9 +15,17 @@
     <div class="col-md-4 mb-4">
      <a href="{% url 'trabajador_detalle' trabajador.id %}" >
       <div class="card">
-        <div class="card-body">
+        {% if trabajador.foto %}
+        <div class="foto">
+          <img src="{{ trabajador.foto.url }}" alt="Foto del Trabajador">
+        </div>
+        {% else %}
+        <div class="foto">
+          <img src="{% static 'servisarg/img/default_photo.png' %}" alt="Foto por defecto" height="200px" width="200px">
+        </div>
+        {% endif %}        <div class="card-body">
             <h5 class="card-title">{{ trabajador.id }}</h5>
-          <h5 class="card-title">{{ trabajador.nombre }} {{ trabajador.apellido }}</h5>
+          <h5 class="card-title">{{ trabajador.first_name}} {{ trabajador.last_name  }}</h5>
           <p class="card-text">Oficio: {{ trabajador.oficio }}</p>
           <p class="card-text">Teléfono: {{ trabajador.telefono }}</p>
           <p class="card-text">Área de trabajo: {{ trabajador.direccion }}</p>

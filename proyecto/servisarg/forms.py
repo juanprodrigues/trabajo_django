@@ -12,59 +12,56 @@ TYPE_CHOICES = [
     ("reclamo","Reclamo"),
     ("sugerencia", "Sugerencia")
 ]
+
+TYPE_CHOICES_TYPE_USER = [
+    ("trabajador", "Trabajador"),
+    ("trabajador","Cliente"),
+    ("trabajador-cliente", "Trabajador-Cliente")
+]
 class MockUser(AbstractUser):
     class Meta:
         abstract = True
 
 class TrabajadorForm(forms.ModelForm):
-    print(forms.ModelForm)
+    print("form",forms.ModelForm)
     fecha_nacimiento = forms.DateField(widget=forms.DateInput(attrs={'type': 'date','class': 'form-control'}))
     dni = forms.IntegerField(max_value=999999999,widget=forms.TextInput(attrs={'class': 'form-control','type': 'number'}))
     # clave = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     oficio = oficio = forms.ModelChoiceField(queryset=Oficio.objects.all())
-
+    tipo_usuario = forms.ChoiceField(choices= TYPE_CHOICES_TYPE_USER)
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), required=True)
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')  # Obtener el usuario logeado
         super().__init__(*args, **kwargs)
         self.fields['oficio'].widget.attrs.update({'class': 'form-control'})
+        self.fields['tipo_usuario'].widget.attrs.update({'class': 'form-control'})
         self.user = user  # Asignar el usuario a un atributo de la instancia del formulario
         # Agrega otros campos y estilos personalizados si es necesario
-    def save(self, commit=True):
-            print("antes de guardar")
+    def save(self, commit=True,request=None):
             instance = super().save(commit=False)
-            # instance.usuario = self.cleaned_data['user']  # Establecer el usuario logeado en el campo 'usuario'
+            if Trabajador.objects.filter(username=self.user).exists():
+                trabajador_modificar=Trabajador.objects.get(username=self.user)
+                if trabajador_modificar:
+                    instance.id=trabajador_modificar.id
             user=User.objects.get(username=self.user)
-
-            print("Username:", user.username)
-            print("Email:", user.email)
-            print("Nombre completo:", user.get_full_name())
-            print("Es staff:", user.is_staff)
-            print("Es superusuario:", user.is_superuser)
-            # y otros atributos del objeto User
-
-            # También puedes acceder a relaciones como grupos y permisos
-            print("Grupos:")
-            for group in user.groups.all():
-                print(group.name)
-
-            print("Permisos:")
-            for permission in user.user_permissions.all():
-                print(permission.codename)
-            instance.username = self.user  # Establecer el usuario logeado en el campo 'usuario'
-            # instance.username = user.username
-            instance.email = user.email
-            instance.first_name = user.first_name
-            instance.last_name = user.last_name
+            instance.username = user.username  # Establecer el usuario logeado en el campo 'usuario'
+            # instance.email = user.email
+            # instance.first_name = user.first_name
+            # instance.last_name = user.last_name
             instance.last_login = user.last_login
             instance.usuario_id = user.id
             instance.password =user.last_login
+            print(request.FILES['foto'])
+            if request is not None and 'foto' in request.FILES:
+                instance.foto = request.FILES['foto']
 
-            # print("nani",instance)
             if commit:
                 instance.save()
             return instance
     class Meta:
-        exclude = ('usuario','user_permissions','groups','is_active','date_joined','is_staff','password','last_login','is_superuser','first_name','first_name','last_name','username','email')
+        exclude = ('usuario','user_permissions','groups','is_active','date_joined','is_staff','password','last_login','is_superuser','username')
         # Resto de tus opciones de configuración del formulario
         model = Trabajador
         fields = '__all__'
@@ -75,11 +72,23 @@ class TrabajadorForm(forms.ModelForm):
             'telefono': forms.NumberInput(attrs={'class': 'form-control', 'type': 'number'}),
             # 'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'oficio': forms.Select(attrs={'class': 'form-control'}),
-            'descripcion': forms.Textarea(attrs={'class': 'form-select', 'rows': 3, 'style': 'resize: none;'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-select', 'rows': 3, 'style': 'resize: none;'}), 
+            'tipo_usuario': forms.Select(attrs={'class': 'form-control'}),
+            # 'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            # 'last_name': forms.TextInput(attrs={'class': 'form-control'}),            
             # 'usuario': forms.TextInput(attrs={'class': 'form-control'})
 
             # Agrega widgets y atributos de clase personalizados para los campos invisibles
         }
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        
+        # Verificar si ya existe un trabajador con este correo electrónico
+        if Trabajador.objects.filter(email=email).exists():
+            raise forms.ValidationError("Ya existe un Usuario con este correo electrónico.")
+        
+        return email
+        
     def clean_fecha_nacimiento(self):
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
         
@@ -92,7 +101,7 @@ class TrabajadorForm(forms.ModelForm):
             edad = fecha_actual.year - fecha_nacimiento.year - ((fecha_actual.month, fecha_actual.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
             
             # Verificar si la edad es menor a 18 años (mayor de edad)
-            if False:
+            if edad<18:
                 raise forms.ValidationError("Debes ser mayor de edad para registrarte.")
         
         return fecha_nacimiento      

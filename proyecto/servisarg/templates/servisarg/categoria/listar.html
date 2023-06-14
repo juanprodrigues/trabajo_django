@@ -1,0 +1,44 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+
+{ {% block css_adicionales %}
+<link rel="stylesheet" href="{% static '\servisarg\css\alta_trabajador.css' %}">
+{% endblock %}}
+
+1
+{%block titulo%}Lista de oficios{% endblock %}
+{% block encabezado %}
+
+    <h1 class="text-center">Lista de oficios</h1>
+{% endblock %}
+{% block contenido %} 
+
+<div class="container">
+    <div class="float-left">
+    <a href="{% url 'crear_oficio'%}" class="btn btn-success">Añadir</a>
+</div>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Nombre del Oficio</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for oficio in oficios %}
+      <tr>
+        <td>{{ oficio.nombre }}</td>
+        <td>
+            <div class="float-right">
+              <a href="{% url 'modificar_oficio' oficio.id %}" class="btn btn-primary">Editar</a>
+              <a href="{% url 'eliminar_oficio' oficio.id %}" class="btn btn-danger">Eliminar</a>
+            </div>
+          </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+  {% endblock %}
