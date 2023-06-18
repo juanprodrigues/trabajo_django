@@ -22,12 +22,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         conversation = await database_sync_to_async(Conversation.objects.filter(room_name=self.room_name).first)()
         if not conversation:
             # Create a new conversation if it doesn't exist ejemplo--> 2_1 (idCliente=2 and idTrabajador=1)
-            cadena = self.room_name
-            partes = cadena.split("_")
-            entero1 = int(partes[0])
-            entero2 = int(partes[1])
-            user_cliente_id = await database_sync_to_async(User.objects.filter(id=entero1).first)()
-            user_trabajador_id=await database_sync_to_async(Trabajador.objects.filter(id=entero2).first)()
+            room_name_split = self.room_name.split("_")
+            id_1 = int(room_name_split[0])
+            id_2 = int(room_name_split[1])
+            user_cliente_id = await database_sync_to_async(User.objects.filter(id=id_1).first)()
+            user_trabajador_id=await database_sync_to_async(Trabajador.objects.filter(id=id_2).first)()
             conversation = await database_sync_to_async(Conversation.objects.create)( room_name=self.room_name, user1=user_cliente_id, user2=user_trabajador_id)
 
         # Retrieve existing messages}

@@ -114,10 +114,23 @@
         
         if (data.sender === username) {
             imageTag.src = '{{ user.photo.url }}'; // Ruta de la imagen del usuario actual
+
+            if (imageTag.src.includes('/media/static/')) {
+                console.log(1)
+                // Reemplazar solo la primera aparición de "/media/static/" por "/static/"
+                imageTag.src = imageTag.src.replace('/media/static/', '/static/');
+              }
             // Agregar la imagen al mensaje después del contenido
             messageDiv.appendChild(imageTag);
+
+
         } else {
             imageTag.src = '{{ chat_with.photo.url }}'; // Ruta de la imagen del usuario chat_with
+            if (imageTag.src.includes('/media/static/')) {
+                console.log(1)
+                // Reemplazar solo la primera aparición de "/media/static/" por "/static/"
+                imageTag.src = imageTag.src.replace('/media/static/', '/static/');
+              }
             // Agregar la imagen al mensaje antes del contenido
             messageDiv.prepend(imageTag);
         }

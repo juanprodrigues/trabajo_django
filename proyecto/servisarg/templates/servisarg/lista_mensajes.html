@@ -10,12 +10,12 @@
         <li class="list-group-item">
             <a href="{% url 'chat:room' room_name=conversation.room_name %}">
                 <div class="media">
-                    {% if conversation.foto %}
-                    <img src="{{ conversation.foto.url }}" class="mr-3 rounded-circle" alt="Foto de perfil">
+                    {% if conversation.is_photo_default %}
+                        <img src="{% static 'servisarg/img/default_photo.png'%}"  class="mr-3 rounded-circle" alt="Foto de perfil">
                     {% else %}
-                    <img src="{% static 'servisarg/img/default_photo.png' %}" class="mr-3 rounded-circle"
-                        alt="Foto de perfil predeterminada">
-                    {% endif %} <div class="media-body">
+                        <img src="{{ conversation.foto.url }}" class="mr-3 rounded-circle" alt="Foto de perfil">
+                    {% endif %}
+                    <div class="media-body">
                         <h5>{{ conversation.first_name }} {{ conversation.last_name }}</h5>
                         <p class="mb-0">Última Fecha: {{ conversation.ultima_fecha }}</p>
                     </div>

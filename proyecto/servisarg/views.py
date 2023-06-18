@@ -10,6 +10,8 @@ from .forms import TrabajadorForm, ConsultaReclamoSugerenciaForm, OficioForm, Cu
 from .models import Trabajador, Oficio,ConsultaReclamoSugerencia
 from chat.models import Conversation, Message
 from django.db.models import Count
+from django.templatetags.static import static
+from django.core.cache import cache
 
 from django.contrib.auth import login
 # Create your views here.
@@ -215,27 +217,32 @@ def eliminar_oficio(request, oficio_id):
 
 
 # ! no permitir que otros usuarios externos e internos ingresen a salas que no le coorresponde en chat, esta el user
-
 @user_passes_test(is_trabajador_or_not_staff, login_url='login')
 def room(request):
     room_name = Conversation.objects.filter(user2=request.user.username)
     # *preguntar si es user o trabajar
-    isClient=User.objects.filter(username=request.user.username).exists() 
-    if isClient:
+    isClient=Trabajador.objects.filter(username=request.user.username).exists()
+    print(isClient)
+    if not isClient:
         # si es true, voy a traer las salas de user 1, que corresponden a clientes
         room_name = Conversation.objects.filter(user1=request.user.username)
     for conversation in room_name:
         # Accede a los campos existentes de la conversación
         user1 = conversation.user1
         user_client = User.objects.get(username=user1)
-        if isClient:
+        if not isClient:
             # si es true, voy a traer la informacion de Trabajador(user_2), por que corresponden a clientes
             user2 = conversation.user2
             user_client = User.objects.get(username=user2)
-
         conversation.last_name = user_client.last_name
         conversation.first_name = user_client.first_name
-        conversation.foto = user_client.photo
+        conversation.is_photo_default = False
+        if user_client.photo:
+            conversation.foto = user_client.photo
+        else:
+            conversation.is_photo_default = True
+
+        # print("nani",conversation.foto)
         conversation.ultima_fecha = Message.objects.filter(
         conversation_id=conversation.id).aggregate(Max('timestamp'))['timestamp__max']
     context = {
