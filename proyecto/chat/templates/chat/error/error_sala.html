@@ -1,0 +1,22 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+
+{%block titulo%}Acerca de Nosotros{% endblock %}
+
+  {% block contenido %}
+<div class="container mt-5">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6">
+      <img src="{% static 'img/error_sala.png' %}" alt="Error" class="img-fluid w-100">
+    </div>
+    <div class="col-md-6">
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error</h4>
+        <p>Esta sala no está disponible para ti.</p>
+        <hr>
+        <p class="mb-0">Por favor, ponte en contacto con el administrador para más información.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

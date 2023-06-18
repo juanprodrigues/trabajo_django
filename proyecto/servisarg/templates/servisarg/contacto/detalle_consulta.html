@@ -1,0 +1,21 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+
+{%block titulo%}Detalle de Consulta{% endblock %}
+
+
+{% block contenido %}
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h3><strong>Motivo:</strong>{{ consulta.tipo }}</h3>
+            <p class="card-text"><strong>Nombre:</strong> {{ consulta.nombre }}</p>
+            <p class="card-text"><strong>Apellido:</strong> {{ consulta.apellido }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ consulta.email }}</p>
+            <p class="card-text"><strong>Fecha de consulta:</strong> {{ consulta.fecha_consulta }}</p>
+            <p class="card-text"><strong>Mensaje:</strong> {{ consulta.mensaje }}</p>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

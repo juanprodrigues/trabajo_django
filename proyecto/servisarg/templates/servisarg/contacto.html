@@ -7,18 +7,26 @@
 
 
 {%block titulo%}Contacto{% endblock %}
-{% block encabezado %}
 
-    <h1>Contacto</h1>
-{% endblock %}
 {% block contenido %} 
-    <form action="" method="POST">
-        {% csrf_token %}        
-        {{form.as_p}}  
-
-        <button type="submit" class="boton">Registrar</button>
-        <button type="reset" class="boton">Borrar formulario</button>
-
+<div class="container">
+    <h1 class="text-center">Consulta, Reclamo o Sugerencia</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger">
+                        {% for error in field.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
-
+</div>
 {% endblock %}

@@ -18,7 +18,7 @@
           <img src="{% static 'servisarg/img/default_photo.png' %}" alt="Foto por defecto" height="200px" width="200px">
         </div>
         {% endif %}
-      <h1 class="card-title">{{ trabajador.nombre }} {{ trabajador.apellido }}</h1>
+      <h1 class="card-title">{{ trabajador.last_name }} {{ trabajador.first_name }}</h1>
       <h5 class="card-subtitle mb-2 text-muted">Oficio: {{ trabajador.oficio }}</h5>
       <p class="card-text">Fecha de Nacimiento: {{ trabajador.fecha_nacimiento }}</p>
       <p class="card-text">DNI: {{ trabajador.dni }}</p>
@@ -26,6 +26,7 @@
       <p class="card-text">Teléfono: {{ trabajador.telefono }}</p>
       <p class="card-text">Email: {{ trabajador.email }}</p>
       <p class="card-text">Descripción: {{ trabajador.descripcion }}</p>
+      <a href="{% url 'chat:room' room_name=room_name %}" class="btn btn-primary">Enviar Mensaje</a>
 
     </div>
   </div>

@@ -8,10 +8,58 @@
 
 {%block titulo%}Acerca de Nosotros{% endblock %}
 {% block encabezado %}
-
-    <h1>Acerca</h1>
+<h1 class="text-center">Acerca de Nosotros</h1>
 {% endblock %}
 {% block contenido %} 
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, ea veniam quisquam impedit excepturi, atque iure ipsa itaque amet reiciendis numquam illo molestias ullam accusantium fuga corporis a consectetur cum!</p>
+<div class="container">
+    <div class="image-container">
+        <img src= "{% static 'servisarg/img/about_us_image.svg'%}" alt="Imagen representativa">
+    </div>
+    <p>
+        Bienvenidos a nuestro sitio web, donde conectamos a personas que ofrecen servicios de oficios con clientes que necesitan contratarlos.
+    </p>
+    <p>
+        Nuestro objetivo es brindar una plataforma segura y confiable donde puedas encontrar los servicios que necesitas y contratar a los mejores profesionales en el área.
+    </p>
+    <p>
+        Tanto si eres un profesional en busca de oportunidades laborales, como si eres un cliente en busca de servicios de calidad, nuestro sitio te ofrece la solución perfecta.
+    </p>
+    <p>
+        ¡Explora nuestros perfiles de trabajadores, lee las reseñas de otros clientes y comienza a encontrar los servicios que necesitas hoy mismo!
+    </p>
+</div>
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    p {
+        color: #666;
+        line-height: 1.5;
+    }
+
+    .image-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .image-container img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
 {% endblock %}

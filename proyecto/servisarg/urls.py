@@ -1,9 +1,7 @@
-from django.urls import path
+from django.urls import include, path
 from . import views
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -19,13 +17,15 @@ urlpatterns = [
     path('register/',views.register_user, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
-
-    path('listar/', views.listar_oficios, name='listar_oficios'),
+    path('listar_oficios/', views.listar_oficios, name='listar_oficios'),
     path('crear/', views.alta_oficio, name='crear_oficio'),
     path('modificar/<int:oficio_id>/', views.modificar_oficio, name='modificar_oficio'),
     path('eliminar/<int:oficio_id>/', views.eliminar_oficio, name='eliminar_oficio'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('chat/', include(('chat.urls', 'chat'), namespace='chat')),
+    path('mensajes/',  views.room, name='room'),
+    path('modificar-usuario/<int:pk>/', views.modificar_user, name='modificar_usuario'),
+    path('lista_consultas/', views.lista_consultas, name='lista_consultas'),
+    path('consulta/<int:consulta_id>/', views.detalle_consulta, name='detalle_consulta'),
 
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] 

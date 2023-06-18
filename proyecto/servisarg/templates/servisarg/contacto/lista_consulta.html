@@ -1,0 +1,80 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+{%block titulo%}Lista de Consulta{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <h1>Lista de Consultas</h1>
+    <ul class="list-group">
+        {% for consulta in consultas %}
+        <li class="list-group-item {% if not consulta.leido %}no-leido{% endif %}">
+            <a href="{% url 'detalle_consulta' consulta.id %}">
+                <div class="media">
+                    {% if consulta.leido %}
+                    <img src="{% static 'servisarg/img/open.png' %}" class="mr-3" alt="Mensaje leído">
+                    {% else %}
+                    <img src="{% static 'servisarg/img/close.png' %}" class="mr-3" alt="Mensaje no leído">
+                    {% endif %}
+                    <div class="media-body">
+                        <h5>{{ consulta.nombre }} {{ consulta.apellido }}</h5>
+                        <p class="mb-0">Asunto: {{ consulta.tipo }}</p>
+                        <p class="ultima-fecha">Fecha de Envio: {{ consulta.fecha_creacion }}</p>
+                    </div>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<style>
+   /* Estilos para la lista de mensajes */
+   .list-group-item {
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.list-group-item.no-leido {
+    background-color: #f8d7da; /* Color de fondo para mensajes no leídos */
+}
+
+.list-group-item:hover {
+    background-color: #f2f2f2;
+}
+
+.media {
+    display: flex;
+    align-items: center;
+}
+
+.media img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.media-body {
+    flex: 1;
+}
+
+h5 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+p {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 0;
+}
+
+.ultima-fecha {
+    font-size: 12px;
+    color: #888;
+}
+</style>
+
+
+{% endblock %}

@@ -1,28 +1,58 @@
 {% extends 'servisarg/base.html' %}
-{% block titulo %}Registro ServisArg{% endblock %}
+
+{% block titulo %}
+  Registro ServisArg
+{% endblock %}
 
 {% block encabezado %}
-  <h2 class="mb-4 text-center">Registrarse</h2>
+  {% if user.is_authenticated %}
+    <!-- El usuario está autenticado -->
+    <h2 class="mb-4 text-center">Modificando Usuario</h2>
+  {% else %}
+    <!-- El usuario no está autenticado -->
+    <h2 class="mb-4 text-center">Registrarse</h2>
+  {% endif %}
 {% endblock %}
 
 {% block contenido %}
   <div class="d-flex justify-content-center">
-    <form method="post" class="needs-validation" novalidate style="max-width: 400px; width: 100%;">
+    <form enctype="multipart/form-data" method="post" class="needs-validation" novalidate style="max-width: 400px; width: 100%;">
       {% csrf_token %}
       {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.errors %}
-            <div class="text-danger">
-              {% for error in field.errors %}
-                {{ error }}
-              {% endfor %}
-            </div>
-          {% endif %}
-        </div>
+        {% if field.name == 'first_name' or field.name == 'last_name' %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger">
+                {% for error in field.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger">
+                {% for error in field.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
       {% endfor %}
-      <button type="submit" class="btn btn-primary">Registrarse</button>
+
+      {% if user.is_authenticated %}
+        <!-- El usuario está autenticado -->
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      {% else %}
+        <!-- El usuario no está autenticado -->
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+      {% endif %}
     </form>
   </div>
 {% endblock %}

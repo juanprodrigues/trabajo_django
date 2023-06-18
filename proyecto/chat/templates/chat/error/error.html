@@ -1,0 +1,23 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+
+{%block titulo%}Acerca de Nosotros{% endblock %}
+{% block contenido %}
+
+  <div class="container mt-5">
+    <div class="row d-flex align-items-center">
+      <div class="col-md-6">
+        <img src="{% static 'img/error.png' %}" alt="Error" class="img-fluid w-100">
+      </div>
+      <div class="col-md-6">
+        <div class="alert alert-danger" role="alert">
+          <h4 class="alert-heading">Error</h4>
+          <p>Ha ocurrido un error al cargar la sala.</p>
+          <hr>
+          <p>Por favor, comunícate con el administrador para solucionar este problema.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}

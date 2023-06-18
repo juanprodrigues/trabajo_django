@@ -1,0 +1,22 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+
+{%block titulo%}Acerca de Nosotros{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <div class="row d-flex align-items-center">
+    <div class="col-md-6">
+      <img src="{% static 'img/error_permiso.png' %}" alt="Error" class="img-fluid w-100">
+    </div>
+    <div class="col-md-6">
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Acceso denegado</h4>
+        <p>No tienes permisos para acceder a esta sala.</p>
+        <hr>
+        <p>Por favor, contacta al administrador si necesitas asistencia.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

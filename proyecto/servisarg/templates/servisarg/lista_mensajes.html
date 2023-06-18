@@ -1,0 +1,76 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+{%block titulo%}Lista de Mensajes{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <h1>Lista de Mensajes</h1>
+    <ul class="list-group">
+        {% for conversation in room_name %}
+        <li class="list-group-item">
+            <a href="{% url 'chat:room' room_name=conversation.room_name %}">
+                <div class="media">
+                    {% if conversation.foto %}
+                    <img src="{{ conversation.foto.url }}" class="mr-3 rounded-circle" alt="Foto de perfil">
+                    {% else %}
+                    <img src="{% static 'servisarg/img/default_photo.png' %}" class="mr-3 rounded-circle"
+                        alt="Foto de perfil predeterminada">
+                    {% endif %} <div class="media-body">
+                        <h5>{{ conversation.first_name }} {{ conversation.last_name }}</h5>
+                        <p class="mb-0">Última Fecha: {{ conversation.ultima_fecha }}</p>
+                    </div>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<style>
+    /* styles.css */
+
+    /* Estilos para la lista de mensajes */
+    .list-group-item {
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .list-group-item:hover {
+        background-color: #f2f2f2;
+    }
+
+    .media {
+        display: flex;
+        align-items: center;
+    }
+
+    .media img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+
+    .media-body {
+        flex: 1;
+    }
+
+    h5 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    p {
+        font-size: 14px;
+        color: #888;
+        margin-bottom: 0;
+    }
+
+    .ultima-fecha {
+        font-size: 12px;
+        color: #888;
+    }
+</style>
+{% endblock %}

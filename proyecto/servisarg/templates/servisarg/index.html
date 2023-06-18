@@ -15,12 +15,27 @@
     <h2>Categorías de Oficios</h2>
 
     {% for categoria in lista_categorias %}
-        <article class="categoria-card">
+          <article class="categoria-card">
+
+            {% if user.is_authenticated %}
+            <!-- El usuario está autenticado -->
             <a href="{% url 'trabajadores_categoria' categoria.id %}">
                 <div class="categoria-circle">
-                    <span>{{ categoria.nombre }}</span>
+                    <span>{{ categoria.nombre }}({{ categoria.num_trabajadores }})
+                                            </span>
                 </div>
             </a>
+          {% else %}
+            <!-- El usuario no está autenticado -->
+                <div class="categoria-circle">
+                    <span>{{ categoria.nombre }}({{ categoria.num_trabajadores }})
+                                            </span>
+                </div>
+   
+          {% endif %}
+
+
+
         </article>
     {% empty %}
         <p>No hay trabajadores en la categoría seleccionada</p>

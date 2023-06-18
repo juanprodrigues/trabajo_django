@@ -3,13 +3,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
-from .models import Trabajador, Cliente
-
-# class TrabajadorAdmin(admin.ModelAdmin):
-#     list_display = ('nombre', 'apellido', 'fecha_nacimiento', 'dni', 'direccion', 'telefono', 'email')
-#     list_filter = ('nombre', 'apellido', 'fecha_nacimiento', 'dni', 'direccion', 'telefono', 'email')
-#     search_fields = ('nombre', 'apellido', 'dni', 'email')
-#     ordering = ('apellido', 'nombre')
-
+from .models import *
+from chat.models import *
 admin.site.register(Trabajador)
-admin.site.register(Cliente)
+admin.site.register(Oficio)
+admin.site.register(Message)
+admin.site.register(Conversation)
+admin.site.register(ConsultaReclamoSugerencia)

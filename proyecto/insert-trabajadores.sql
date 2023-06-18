@@ -1,6 +1,6 @@
 -- insert de Oficios
 
-INSERT INTO public.servisarg_oficio (id, nombre)
+INSERT INTO servisarg_oficio (id, nombre)
 VALUES
     (1, 'Cosinero'),
     (2, 'Electricista'),

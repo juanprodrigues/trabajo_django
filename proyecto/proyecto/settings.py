@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'daphne',
+    'chat',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -37,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "servisarg",
+
+
 ]
 
 MIDDLEWARE = [
@@ -88,15 +92,25 @@ WSGI_APPLICATION = "proyecto.wsgi.application"
 # }
 
 # credenciales Juan
-DATABASES ={
+# DATABASES ={
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "trabajo_django",
+#         "USER": "postgres",
+#         "PASSWORD": "root",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.mysql",
         "NAME": "trabajo_django",
-        "USER": "postgres",
+        "USER": "root",
         "PASSWORD": "root",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
+        "HOST": "localhost",
+        "PORT": "3306",
+    },
 }
 
 
@@ -143,6 +157,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-EFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 MEDIA_URL = '/media/'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(MEDIA_ROOT, 'trabajador_photos')
+ASGI_APPLICATION = "proyecto.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
