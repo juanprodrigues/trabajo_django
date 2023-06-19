@@ -1,0 +1,6 @@
+proyecto/proyecto/__pycache__/*
+proyecto/servisarg/__pycache__/*
+proyecto/servisarg/migrations/*
+proyecto/chat/__pycache__/*
+proyecto/chat/migrations/*
+proyecto/media/*

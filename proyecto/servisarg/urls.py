@@ -26,6 +26,8 @@ urlpatterns = [
     path('modificar-usuario/<int:pk>/', views.modificar_user, name='modificar_usuario'),
     path('lista_consultas/', views.lista_consultas, name='lista_consultas'),
     path('consulta/<int:consulta_id>/', views.detalle_consulta, name='detalle_consulta'),
-
+    path('administrar_trabajadores',  views.trabajador_list, name='administrar_trabajadores'),
+    path('edit/<int:pk>/', views.trabajador_update, name='trabajador_edit'),
+    path('delete/<int:pk>/', views.trabajador_delete, name='trabajador_delete'),
 
 ] 

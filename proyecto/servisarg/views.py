@@ -4,14 +4,13 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User
-from .forms import TrabajadorForm, ConsultaReclamoSugerenciaForm, OficioForm, CustomUserCreationForm
+from .forms import TrabajadorForm, ConsultaReclamoSugerenciaForm, OficioForm, CustomUserCreationForm,AdminstracionTrabajadorForm
 from .models import Trabajador, Oficio,ConsultaReclamoSugerencia
 from chat.models import Conversation, Message
 from django.db.models import Count
-from django.templatetags.static import static
-from django.core.cache import cache
+
 
 from django.contrib.auth import login
 # Create your views here.
@@ -47,12 +46,8 @@ def trabajadores_categoria(request, categoria_id):
     context["trabajadores"] = trabajadores
     return render(request, 'servisarg/trabajadores_categoria.html', context)
 
-
 def acerca(request):
     return render(request, 'servisarg/acerca.html')
-
-
-
 
 @user_passes_test(lambda user: user.is_authenticated, login_url='login')
 def alta_trabajador(request):
@@ -264,3 +259,40 @@ def detalle_consulta(request, consulta_id):
     consulta.leido = True
     ConsultaReclamoSugerencia.objects.filter(pk=consulta_id).update(leido=True)
     return render(request, 'servisarg/contacto/detalle_consulta.html', {'consulta': consulta})
+
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+def trabajador_list(request):
+    trabajadores = Trabajador.objects.all()
+    return render(request, 'servisarg/administracion_trabajador/trabajador_list.html', {'trabajadores': trabajadores})
+
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+def trabajador_create(request):
+    if request.method == 'POST':
+        form = AdminstracionTrabajadorForm(request.POST, request.FILES)
+        if form.is_valid():
+            trabajador = form.save()
+            return redirect('trabajador_detail', pk=trabajador.pk)
+    else:
+        form = AdminstracionTrabajadorForm()
+    return render(request, 'servisarg/administracion_trabajador/trabajador_form.html', {'form': form})
+
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+def trabajador_update(request, pk):
+    trabajador = get_object_or_404(Trabajador, pk=pk)
+    if request.method == 'POST':
+        form = AdminstracionTrabajadorForm(request.POST, request.FILES, instance=trabajador)
+        print(form)
+        if form.is_valid():
+            trabajador = form.save()
+            return redirect('administrar_trabajadores')
+    else:
+        form = AdminstracionTrabajadorForm(instance=trabajador)
+    return render(request, 'servisarg/administracion_trabajador/trabajador_form.html', {'form': form})
+
+# Se pude sguir desarrolando para purgar errores 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+def trabajador_delete(request, pk):
+    trabajador = get_object_or_404(Trabajador, pk=pk)
+    if trabajador:
+        trabajador.delete()
+        return redirect('administrar_trabajadores')

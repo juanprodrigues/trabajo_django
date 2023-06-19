@@ -171,3 +171,42 @@ class CustomUserCreationForm(UserCreationForm):
         if self.instance.pk:  # Si no hay instancia (usuario no registrado)
             self.fields['username'].disabled = True
             self.fields['username'].widget.attrs['readonly'] = True
+            
+            
+class AdminstracionTrabajadorForm(forms.ModelForm):
+    email = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    class Meta:
+        model = Trabajador
+        fields = '__all__'
+        exclude = ('usuario', 'user_permissions', 'groups', 'is_active', 'date_joined',
+                   'is_staff', 'password', 'last_login', 'is_superuser', 'username')
+        widgets = {
+            'fecha_nacimiento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'dni': forms.NumberInput(attrs={'class': 'form-control'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefono': forms.NumberInput(attrs={'class': 'form-control'}),
+            'oficio': forms.Select(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'foto': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+    def clean_fecha_nacimiento(self):
+        fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
+        if fecha_nacimiento:
+            edad = timezone.now().date().year - fecha_nacimiento.year
+            if edad < 18:
+                raise ValidationError("Debes ser mayor de 18 años.")
+        return fecha_nacimiento
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        # Obtener el valor original del campo email del objeto Trabajador
+        original_email = self.instance.email
+
+        # Verificar si el valor ha cambiado y ya existe otro Trabajador con el nuevo correo electrónico
+        if email != original_email and Trabajador.objects.filter(email=email).exists():
+            raise ValidationError("Este correo electrónico ya está registrado.")
+
+        return email

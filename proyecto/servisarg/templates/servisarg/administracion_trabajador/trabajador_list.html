@@ -1,0 +1,96 @@
+{% extends 'servisarg/base.html' %}
+{% load static %}
+
+{ {% block css_adicionales %}
+<link rel="stylesheet" href="{% static 'servisarg\css\acerca.css' %}">
+{% endblock %}}
+
+
+{%block titulo%}Acerca de Nosotros{% endblock %}
+{% block encabezado %}
+<h1 class="text-center">Acerca de Nosotros</h1>
+{% endblock %}
+{% block contenido %} 
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas eliminar este trabajador?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <a id="confirmDeleteButton" class="btn btn-danger" href="">Eliminar</a>
+      </div>
+    </div>
+  </div>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th>Nombre de usuario</th>
+      <th>Fecha de Nacimiento</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Email</th>
+      <th>Direcion</th>
+      <th>Telefono</th>
+      <th>Oficio</th>
+      <!-- Agrega más encabezados de columna según tus necesidades -->
+      <th >
+        {% comment %} <div style="margin-right: 16%;"> {% endcomment %}
+          Acciones
+        {% comment %} </div> {% endcomment %}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for trabajador in trabajadores %}
+    <tr>
+      <td>{{ trabajador.usuario.username }}</td>
+      <td>{{ trabajador.fecha_nacimiento }}</td>
+      <td>{{ trabajador.first_name }}</td>
+      <td>{{ trabajador.last_name }}</td>
+      <td>{{ trabajador.email }}</td>
+      <td>{{ trabajador.direccion }}</td>
+      <td>{{ trabajador.telefono }}</td>
+      <td>{{ trabajador.oficio }}</td>
+
+      <!-- Agrega más columnas de datos según tus necesidades -->
+      <td >
+        <a href="{% url 'trabajador_edit' pk=trabajador.pk %}" class="btn btn-primary">Modificar</a>
+        <a href="{% url 'trabajador_delete' pk=trabajador.pk %}" data-toggle="modal" data-target="#confirmDeleteModal" data-url="{% url 'trabajador_delete' pk=trabajador.pk %}" class="btn btn-danger">Eliminar</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+  <style>
+    .modal-dialog.modal-dialog-centered {
+      display: flex;
+      align-items: center;
+      min-height: calc(100vh - 40px); /* Ajusta el valor según tus necesidades */
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#confirmDeleteModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); // Enlace de eliminación que se hizo clic
+        var url = button.data('url'); // Obtener la URL de eliminación del atributo de datos
+  
+        // Actualizar el enlace de eliminación en el modal de confirmación
+        var confirmDeleteButton = $('#confirmDeleteButton');
+        confirmDeleteButton.attr('href', url);
+      });
+    });
+  </script>
+  {% endblock %}
