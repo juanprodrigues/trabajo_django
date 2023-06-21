@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
+
 TYPE_CHOICES = [
     ("Consulta", "Consulta"),
     ("Reclamo", "Reclamo"),
@@ -18,7 +20,10 @@ class TrabajadorForm(forms.ModelForm):
         attrs={'type': 'date', 'class': 'form-control'}))
     dni = forms.IntegerField(max_value=999999999, widget=forms.TextInput(
         attrs={'class': 'form-control', 'type': 'number'}))
-    oficio = oficio = forms.ModelChoiceField(queryset=Oficio.objects.all())
+    oficios = forms.ModelMultipleChoiceField(
+        queryset=Oficio.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})
+    )
     first_name = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control'}), required=True)
     last_name = forms.CharField(widget=forms.TextInput(
@@ -26,13 +31,16 @@ class TrabajadorForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput(
         attrs={'class': 'form-control'}), required=True)
 
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')  # Obtener el usuario logeado
         super().__init__(*args, **kwargs)
-        self.fields['oficio'].widget.attrs.update({'class': 'form-control'})
+        self.fields['oficios'].widget.attrs.update({'class': 'form-control'})
         self.user = user  # Asignar el usuario a un atributo de la instancia del formulario
-        # Agrega otros campos y estilos personalizados si es necesario
-
+        self.initial['first_name'] = user.first_name
+        self.initial['last_name'] = user.last_name
+        self.initial['foto'] = user.photo
+        
     def save(self, commit=True, request=None):
         instance = super().save(commit=False)
         if Trabajador.objects.filter(username=self.user).exists():
@@ -50,6 +58,7 @@ class TrabajadorForm(forms.ModelForm):
 
         if commit:
             instance.save()
+            self.save_m2m()  # Guardar las relaciones many-to-many (oficios)
         return instance
 
     class Meta:
@@ -62,12 +71,20 @@ class TrabajadorForm(forms.ModelForm):
 
             'direccion': forms.TextInput(attrs={'class': 'form-control'}),
             'telefono': forms.NumberInput(attrs={'class': 'form-control', 'type': 'number'}),
-            'oficio': forms.Select(attrs={'class': 'form-control'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-select', 'rows': 3, 'style': 'resize: none;'}),
 
-            # Agrega widgets y atributos de clase personalizados para los campos invisibles
+            
         }
-
+    def clean_dni(self):
+        dni= self.cleaned_data.get('dni')
+        
+        if Trabajador.objects.filter(dni=dni).exists():
+            raise forms.ValidationError(
+                "Ya existe un Usuario con este DNI"
+            )
+            
+        return dni
+        
     def clean_email(self):
         email = self.cleaned_data.get('email')
 
@@ -91,13 +108,57 @@ class TrabajadorForm(forms.ModelForm):
                  (fecha_nacimiento.month, fecha_nacimiento.day))
 
             # Verificar si la edad es menor a 18 años (mayor de edad)
-            # if edad<18:
-            if False:
+            if edad <18:
+                raise forms.ValidationError("Debes ser mayor de edad para registrarte.")
+        
+        return fecha_nacimiento   
 
-                raise forms.ValidationError(
-                    "Debes ser mayor de edad para registrarte.")
 
-        return fecha_nacimiento
+
+class TrabajadorModificarForm(forms.ModelForm):
+    fecha_nacimiento = forms.DateField(widget=forms.DateInput(
+        attrs={'type': 'date', 'class': 'form-control'}))
+    dni = forms.IntegerField(max_value=999999999, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'type': 'number'}))
+    oficios = forms.ModelMultipleChoiceField(
+        queryset=Oficio.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})
+    )
+    first_name = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control'}), required=True)
+    last_name = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control'}), required=True)
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={'class': 'form-control'}), required=True)
+
+    class Meta:
+        exclude = ('usuario', 'user_permissions', 'groups', 'is_active', 'date_joined',
+                   'is_staff', 'password', 'last_login', 'is_superuser', 'username')
+        # Resto de tus opciones de configuración del formulario
+        model = Trabajador
+        fields = '__all__'
+        labels = {
+            'dni': 'DNI',
+            'fecha_nacimiento': 'Fecha de Nacimiento',
+            'direccion': 'Dirección',
+            'telefono': 'Teléfono',
+            'descripcion': 'Descripción',
+        }
+        widgets = {
+
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefono': forms.NumberInput(attrs={'class': 'form-control', 'type': 'number'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-select', 'rows': 3, 'style': 'resize: none;'}),
+        }
+      
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        instance = kwargs.get('instance')
+        if instance:
+            self.fields['oficios'].widget.attrs.update({'class': 'form-control'})
+            self.fields['dni'].disabled = True
+            self.fields['dni'].widget.attrs['readonly'] = True
 
 
 class ConsultaReclamoSugerenciaForm(forms.ModelForm):
@@ -172,7 +233,13 @@ class CustomUserCreationForm(UserCreationForm):
             self.fields['username'].disabled = True
             self.fields['username'].widget.attrs['readonly'] = True
             
-            
+class CustomUserModificationForm(forms.ModelForm):
+    photo = forms.ImageField(label="Foto", required=True)
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name','photo']
+        
+           
 class AdminstracionTrabajadorForm(forms.ModelForm):
     email = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={'class': 'form-control'}))
     class Meta:

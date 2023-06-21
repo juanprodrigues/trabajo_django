@@ -14,3 +14,9 @@ article{
     flex: 1
     ;
 }
+.foto img{
+    width: 80%;
+    height: 15rem;
+    margin:5% 5% 0 10%;
+
+}

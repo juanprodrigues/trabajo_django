@@ -6,12 +6,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User
-from .forms import TrabajadorForm, ConsultaReclamoSugerenciaForm, OficioForm, CustomUserCreationForm,AdminstracionTrabajadorForm
+from .forms import TrabajadorForm,TrabajadorModificarForm,ConsultaReclamoSugerenciaForm, OficioForm, CustomUserCreationForm,CustomUserModificationForm,AdminstracionTrabajadorForm
 from .models import Trabajador, Oficio,ConsultaReclamoSugerencia
 from chat.models import Conversation, Message
 from django.db.models import Count
-
-
 from django.contrib.auth import login
 # Create your views here.
 
@@ -41,7 +39,7 @@ def index(request):
 def trabajadores_categoria(request, categoria_id):
     context = {}
     categoria = Oficio.objects.get(id=categoria_id)
-    trabajadores = Trabajador.objects.filter(oficio=categoria)
+    trabajadores = Trabajador.objects.filter(oficios=categoria)
     context["categoria"] = categoria
     context["trabajadores"] = trabajadores
     return render(request, 'servisarg/trabajadores_categoria.html', context)
@@ -55,21 +53,37 @@ def alta_trabajador(request):
         alta_trabajador_form = TrabajadorForm(request.POST, user=request.user)
         if alta_trabajador_form.is_valid():
             # guarda automáticamente el trabajador
-            trabajador = alta_trabajador_form.save(request=request)
+            alta_trabajador_form.save(request=request)
             messages.success(request, 'Usuario dado de alta exitosamente')
             return redirect("lista_trabajadores")
     else:
-        alta_trabajador_form = TrabajadorForm(user=request.session)
+        alta_trabajador_form = TrabajadorForm( user=request.user)
     contex = {'form': alta_trabajador_form}
     return render(request, 'servisarg/alta_trabajador.html', contex)
 
 @user_passes_test(is_trabajador_or_not_staff, login_url='login')
 def lista_trabajadores(request):
     context = {}
-    listado_trabajadores = Trabajador.objects.all().order_by("oficio")
+    listado_trabajadores = Trabajador.objects.all().order_by("first_name")
     context["listado_trabajadores"] = listado_trabajadores
     context['media_url'] = settings.MEDIA_URL
     return render(request, 'servisarg/lista_trabajadores.html', context)
+
+@user_passes_test(lambda user: user.is_authenticated, login_url='login')
+def modificar_trabajador(request, pk):
+    user = User.objects.get(pk=pk)
+    trabajador = get_object_or_404(Trabajador, username=user.username)
+    print("HOla")
+    if request.method == 'POST':
+        form = TrabajadorModificarForm(request.POST, request.FILES, instance=trabajador)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_trabajadores')
+    else:
+        form = TrabajadorModificarForm(instance=trabajador)
+
+    context = {'form': form}
+    return render(request, 'servisarg/alta_trabajador.html', context)
 
 
 def contacto(request):
@@ -104,10 +118,9 @@ def trabajador_detalle(request, id):
                'room_name': room_name}
     return render(request, 'servisarg/trabajador_detalle.html', context)
 
-
 def register_user(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('login')
@@ -120,19 +133,16 @@ def register_user(request):
 def modificar_user(request, pk):
     user = User.objects.get(pk=pk)
     if request.method == 'POST':
-        form = CustomUserCreationForm(
-            request.POST, request.FILES, instance=user)
+        form = CustomUserModificationForm(request.POST,request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            # Autenticar y volver a iniciar sesión al usuario
-            user = authenticate(request, username=user.username,
-                                password=form.cleaned_data['password1'])
-            login(request, user)
-            return render(request, 'servisarg/index.html')
+            return redirect('index')
     else:
-        form = CustomUserCreationForm(instance=user)
+        form = CustomUserModificationForm(instance=user)
+
     context = {'form': form}
     return render(request, 'servisarg/register.html', context)
+
 
 
 def user_login(request):

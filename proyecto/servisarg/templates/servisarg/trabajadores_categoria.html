@@ -14,14 +14,25 @@
   <div class="row">
     {% for trabajador in trabajadores %}
     <div class="col-md-4 mb-4">
-        <a href="{% url 'trabajador_detalle' trabajador.id %}">
+        <a href="{% url 'trabajador_detalle' trabajador.id %}" class="trabajador-card">
           <div class="card">
-            <img src="{% static 'servisarg/img/default_photo.png' %}"  class="card-img-top" alt="Imagen del trabajador" height="300px" width="200px">
+            <div class="foto">
+              {% if trabajador.foto %}
+                <img src="{{ trabajador.foto.url }}" alt="Foto del Trabajador" class="card-img-top">
+              {% else %}
+                <img src="{% static 'servisarg/img/default_photo.png' %}" alt="Foto por defecto" height="100px" width="100px">
+              {% endif %}
+            </div>
             <div class="card-body">
-              <h5 class="card-title">{{ trabajador.id }}</h5>
-              <h5 class="card-title">{{ trabajador.nombre }} {{ trabajador.apellido }}</h5>
-              <p class="card-text">Oficio: {{ trabajador.oficio }}</p>
-              <p class="card-text">Teléfono: {{ trabajador.telefono }}</p>
+              <h5 class="card-title">{{ trabajador.get_full_name }}</h5>
+              <p class="card-text">Oficios:</p>
+              <ul class="list-unstyled">
+                {% for oficio in trabajador.oficios.all %}
+                  <li>{{ oficio.nombre }}</li>
+                {% empty %}
+                  <li>No hay oficios registrados</li>
+                {% endfor %}
+              </ul>
               <p class="card-text">Área de trabajo: {{ trabajador.direccion }}</p>
             </div>
           </div>

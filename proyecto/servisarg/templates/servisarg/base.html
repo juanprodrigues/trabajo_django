@@ -55,7 +55,7 @@
               {% if user.is_authenticated %}
                   {% if trabajador_exists %}
                     <li class="nav-item">
-                      <a class="nav-link" href="{% url 'alta_trabajador' %}">Modificar Usuario</a>
+                      <a class="nav-link" href="{% url 'modificar_trabajador' user.pk %}">Modificar Datos</a>
                     </li>
                   {% else %}
                       <li class="nav-item">

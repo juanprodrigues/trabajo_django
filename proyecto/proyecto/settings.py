@@ -80,16 +80,16 @@ WSGI_APPLICATION = "proyecto.wsgi.application"
 
 # credenciales Luwpin
 
-# DATABASES ={
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "trabajo_django",
-#         "USER": "postgres",
-#         "PASSWORD": "lupwin1404",
-#         "HOST": "127.0.0.1",
-#         "PORT": "5432",
-#     }
-# }
+DATABASES ={
+     "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "trabajo_django1",         
+        "USER": "postgres",
+        "PASSWORD": "lupwin1404",
+        "HOST": "127.0.0.1",
+         "PORT": "5432",
+    }
+}
 
 # credenciales Juan
 # DATABASES ={
@@ -102,16 +102,16 @@ WSGI_APPLICATION = "proyecto.wsgi.application"
 #         "PORT": "5432",
 #     }
 # }
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "trabajo_django",
-        "USER": "root",
-        "PASSWORD": "root",
-        "HOST": "localhost",
-        "PORT": "3306",
-    },
-}
+#DATABASES = {
+#    "default": {
+#        "ENGINE": "django.db.backends.mysql",
+#        "NAME": "trabajo_django",
+#        "USER": "root",
+#        "PASSWORD": "root",
+#        "HOST": "localhost",
+#        "PORT": "3306",
+#    },
+#}
 
 
 # Password validation
