@@ -31,8 +31,8 @@ class Trabajador(AbstractUser):
     fecha_nacimiento = models.DateField(verbose_name="Fecha de Nacimiento")
     dni = models.IntegerField(verbose_name="DNI")
     direccion = models.CharField(max_length=250, verbose_name="Dirección")
-    telefono = models.IntegerField(verbose_name="Telefono", validators=[
-                                   MaxValueValidator(9999999999)])
+    telefono = models.CharField(verbose_name="Teléfono", unique=True, max_length=15)
+
     oficios = models.ManyToManyField(
         Oficio,
         blank=True,

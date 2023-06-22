@@ -78,7 +78,9 @@ def modificar_trabajador(request, pk):
         form = TrabajadorModificarForm(request.POST, request.FILES, instance=trabajador)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Trabajador modificado exitosamente')
             return redirect('lista_trabajadores')
+
     else:
         form = TrabajadorModificarForm(instance=trabajador)
 
@@ -136,6 +138,7 @@ def modificar_user(request, pk):
         form = CustomUserModificationForm(request.POST,request.FILES, instance=user)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Usuario modificado exitosamente')
             return redirect('index')
     else:
         form = CustomUserModificationForm(instance=user)
@@ -178,7 +181,7 @@ def alta_oficio(request):
         alta_oficio_form = OficioForm(request.POST)
         if alta_oficio_form.is_valid():
             alta_oficio_form.save()  # guarda automáticamente el trabajador
-            messages.success(request, 'Usuario dado de alta exitosamente')
+            messages.success(request, 'Oficio creado exitosamente')
             return redirect('listar_oficios')
     else:
         alta_oficio_form = OficioForm()
@@ -207,6 +210,7 @@ def modificar_oficio(request, oficio_id):
             nombre = form.cleaned_data['nombre']
             oficio.nombre = nombre
             oficio.save()
+            messages.success(request, 'Oficio modificado exitosamente')
             return redirect('listar_oficios')
     else:
         form = OficioForm(initial={'nombre': oficio.nombre})
@@ -218,6 +222,7 @@ def modificar_oficio(request, oficio_id):
 def eliminar_oficio(request, oficio_id):
     oficio = Oficio.objects.get(id=oficio_id)
     oficio.delete()
+    messages.success(request, 'Oficio eliminado exitosamente')
     return redirect('listar_oficios')
 
 
@@ -276,17 +281,6 @@ def trabajador_list(request):
     return render(request, 'servisarg/administracion_trabajador/trabajador_list.html', {'trabajadores': trabajadores})
 
 @user_passes_test(lambda user: user.is_staff, login_url='login')
-def trabajador_create(request):
-    if request.method == 'POST':
-        form = AdminstracionTrabajadorForm(request.POST, request.FILES)
-        if form.is_valid():
-            trabajador = form.save()
-            return redirect('trabajador_detail', pk=trabajador.pk)
-    else:
-        form = AdminstracionTrabajadorForm()
-    return render(request, 'servisarg/administracion_trabajador/trabajador_form.html', {'form': form})
-
-@user_passes_test(lambda user: user.is_staff, login_url='login')
 def trabajador_update(request, pk):
     trabajador = get_object_or_404(Trabajador, pk=pk)
     if request.method == 'POST':
@@ -294,10 +288,12 @@ def trabajador_update(request, pk):
         print(form)
         if form.is_valid():
             trabajador = form.save()
+            messages.success(request, 'Trabajador modificado exitosamente')
+
             return redirect('administrar_trabajadores')
     else:
         form = AdminstracionTrabajadorForm(instance=trabajador)
-    return render(request, 'servisarg/administracion_trabajador/trabajador_form.html', {'form': form})
+    return render(request, 'servisarg/administracion_trabajador/trabajador_form.html', {'form': form,'username':trabajador.username})
 
 # Se pude sguir desarrolando para purgar errores 
 @user_passes_test(lambda user: user.is_staff, login_url='login')
@@ -305,4 +301,5 @@ def trabajador_delete(request, pk):
     trabajador = get_object_or_404(Trabajador, pk=pk)
     if trabajador:
         trabajador.delete()
+        messages.success(request, 'Trabajador Eliminado exitosamente')
         return redirect('administrar_trabajadores')

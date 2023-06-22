@@ -64,7 +64,6 @@ class TrabajadorForm(forms.ModelForm):
     class Meta:
         exclude = ('usuario', 'user_permissions', 'groups', 'is_active', 'date_joined',
                    'is_staff', 'password', 'last_login', 'is_superuser', 'username')
-        # Resto de tus opciones de configuración del formulario
         model = Trabajador
         fields = '__all__'
         widgets = {
@@ -122,7 +121,8 @@ class TrabajadorModificarForm(forms.ModelForm):
         attrs={'class': 'form-control', 'type': 'number'}))
     oficios = forms.ModelMultipleChoiceField(
         queryset=Oficio.objects.all(),
-        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+        required=False
     )
     first_name = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control'}), required=True)
@@ -130,6 +130,11 @@ class TrabajadorModificarForm(forms.ModelForm):
         attrs={'class': 'form-control'}), required=True)
     email = forms.EmailField(widget=forms.EmailInput(
         attrs={'class': 'form-control'}), required=True)
+    def clean(self):
+        cleaned_data = super().clean()
+        oficios = cleaned_data.get('oficios')
+        if not oficios:
+            self.add_error('oficios', 'Debe seleccionar al menos un oficiog.')
 
     class Meta:
         exclude = ('usuario', 'user_permissions', 'groups', 'is_active', 'date_joined',
@@ -148,7 +153,7 @@ class TrabajadorModificarForm(forms.ModelForm):
 
             'direccion': forms.TextInput(attrs={'class': 'form-control'}),
             'telefono': forms.NumberInput(attrs={'class': 'form-control', 'type': 'number'}),
-            'descripcion': forms.Textarea(attrs={'class': 'form-select', 'rows': 3, 'style': 'resize: none;'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-select responsive-textarea', 'rows': 3, 'style': 'resize: none;'}),
         }
       
 
@@ -242,6 +247,10 @@ class CustomUserModificationForm(forms.ModelForm):
            
 class AdminstracionTrabajadorForm(forms.ModelForm):
     email = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['dni'].disabled = True
+        self.fields['dni'].widget.attrs['readonly'] = True
     class Meta:
         model = Trabajador
         fields = '__all__'

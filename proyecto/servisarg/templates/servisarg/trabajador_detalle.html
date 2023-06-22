@@ -9,33 +9,48 @@
 <section class="detalle">
   <div class="card">
     <div class="card-body">
-        {% if trabajador.foto %}
-        <div class="foto">
-          <img src="{{ trabajador.foto.url }}" alt="Foto del Trabajador" class="card-img-top">
+      <div class="row">
+        <div class="col-md-4">
+          {% if trabajador.foto %}
+          <div class="foto">
+            <img src="{{ trabajador.foto.url }}"  alt="Foto del Trabajador" class="card-img-top" >
+          </div>
+          {% else %}
+          <div class="foto">
+            <img src="{% static 'servisarg/img/default_photo.png' %}" alt="Foto por defecto" class="card-img-top" >
+          </div>
+          {% endif %}
         </div>
-        {% else %}
-        <div class="foto">
-          <img src="{% static 'servisarg/img/default_photo.png' %}" alt="Foto por defecto" height="200px" width="200px">
+        <div class="col-md-8">
+          <h1 class="card-title">{{ trabajador.get_full_name }}</h1>
+          <h5 class="card-subtitle mb-2 text-muted">Oficios: {{ trabajador.oficio }}</h5>
+          <ul class="list-unstyled">
+            {% for oficio in trabajador.oficios.all %}
+            <li>{{ oficio.nombre }}</li>
+            {% empty %}
+            <li>No hay oficios registrados</li>
+            {% endfor %}
+          </ul>
+          <p class="card-text">Fecha de Nacimiento: {{ trabajador.fecha_nacimiento }}</p>
+          <p class="card-text">DNI: {{ trabajador.dni }}</p>
+          <p class="card-text">Dirección: {{ trabajador.direccion }}</p>
+          <p class="card-text">Teléfono: {{ trabajador.telefono }}</p>
+          <p class="card-text">Email: {{ trabajador.email }}</p>
+          <p class="card-text">Descripción: {{ trabajador.descripcion }}</p>
+          <a href="{% url 'chat:room' room_name=room_name %}" class="btn btn-primary">Enviar Mensaje</a>
         </div>
-        {% endif %}
-      <h1 class="card-title">{{ trabajador.get_full_name }}</h1>
-      <h5 class="card-subtitle mb-2 text-muted">Oficios: {{ trabajador.oficio }}</h5>
-      <ul class="list-unstyled">
-        {% for oficio in trabajador.oficios.all %}
-          <li>{{ oficio.nombre }}</li>
-        {% empty %}
-          <li>No hay oficios registrados</li>
-        {% endfor %}
-      </ul>
-      <p class="card-text">Fecha de Nacimiento: {{ trabajador.fecha_nacimiento }}</p>
-      <p class="card-text">DNI: {{ trabajador.dni }}</p>
-      <p class="card-text">Dirección: {{ trabajador.direccion }}</p>
-      <p class="card-text">Teléfono: {{ trabajador.telefono }}</p>
-      <p class="card-text">Email: {{ trabajador.email }}</p>
-      <p class="card-text">Descripción: {{ trabajador.descripcion }}</p>
-      <a href="{% url 'chat:room' room_name=room_name %}" class="btn btn-primary">Enviar Mensaje</a>
-
+      </div>
     </div>
   </div>
 </section>
+<style>
+  .card-img-top{
+width:100% !important;
+height:100% !important
+
+
+
+  }
+
+</style>
 {% endblock %}

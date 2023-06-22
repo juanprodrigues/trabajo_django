@@ -7,9 +7,6 @@
 
 {% block contenido %}
 <style>
-    body {
-        padding: 40px;
-    }
     .form-group {
         text-align: center;
     }
@@ -26,121 +23,197 @@
     }
 </style>
 <div class="container">
-    <form action="" method="POST"  enctype="multipart/form-data">
+    <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-
+    
         {% if trabajador_exists %}
         <h1 class="text-center">Modificar Trabajador</h1>
         {% else %}
         <h1 class="text-center">Alta de Trabajador</h1>
         {% endif %}
-
+    
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Username:</label>
-                    <input disabled value={{user.username}}>
+                    <label class="text-left">Username:</label>
+                    <input class="form-control" disabled value={{user.username}}>
                 </div>
-
+    
                 <div class="form-group">
-                    <label for="{{ form.first_name.id_for_label }}">Nombre:</label>
+                    <label class="text-left" for="{{ form.first_name.id_for_label }}">Nombre:</label>
                     {{ form.first_name }}
                     {% for error in form.first_name.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
-
+    
                 <div class="form-group">
-                    <label for="{{ form.last_name.id_for_label }}">Apellido:</label>
+                    <label class="text-left" for="{{ form.last_name.id_for_label }}">Apellido:</label>
                     {{ form.last_name }}
                     {% for error in form.last_name.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
-
+    
                 <div class="form-group">
-                    <label for="{{ form.email.id_for_label }}">Email:</label>
+                    <label class="text-left" for="{{ form.email.id_for_label }}">Email:</label>
                     {{ form.email }}
                     {% for error in form.email.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
-            </div>
 
+  
+                    <div class="form-group">
+                        <label class="text-left" for="{{ form.descripcion.id_for_label }}">Descripción:</label>
+                        {{ form.descripcion }}
+                        {% for error in form.descripcion.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+      
+                     </div>
+
+
+                     <div class="form-group">
+                        <label class="text-left" for="{{ form.foto.id_for_label }}">Foto:</label>
+                        {% if form.foto.value %}
+                            <div  class="text-left">
+                                  Actualmente:  
+                                  <a href='{{form.foto.value.url}}'>{{form.foto.value}}
+
+                                  </a>  </div>
+                                  <div  class="text-left">
+                                    Modificar:                
+                                    </a>  </div>
+                                  
+                        {% endif %}
+                        <input type="file" name="{{ form.foto.name }}" id="{{ form.foto.id_for_label }}" class="form-control-file">
+                        {% if form.foto.errors %}
+                            <div class="text-danger">{{ form.foto.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+            </div>
+    
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de Nacimiento:</label>
+                    <label class="text-left" for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de Nacimiento:</label>
                     {{ form.fecha_nacimiento }}
                     {% for error in form.fecha_nacimiento.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
-
-                <div class="form-group">
-                    <label for="{{ form.dni.id_for_label }}">DNI:</label>
-                    {{ form.dni }}     
     
-
+                <div class="form-group">
+                    <label class="text-left" for="{{ form.dni.id_for_label }}">DNI:</label>
+                    {{ form.dni }}
                     {% for error in form.dni.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
-
+    
                 <div class="form-group">
-                    <label for="{{ form.direccion.id_for_label }}">Dirección:</label>
+                    <label class="text-left" for="{{ form.direccion.id_for_label }}">Dirección:</label>
                     {{ form.direccion }}
                     {% for error in form.direccion.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
-
+    
                 <div class="form-group">
-                    <label for="{{ form.telefono.id_for_label }}">Telefono:</label>
+                    <label class="text-left" for="{{ form.telefono.id_for_label }}">Telefono:</label>
                     {{ form.telefono }}
                     {% for error in form.telefono.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
-
+    
                 <div class="form-group">
-                    <label for="{{ form.oficio.id_for_label }}">Oficio:</label>
-                    {{ form.oficios }}
+                    <label class="text-left" for="{{ form.oficios.id_for_label }}">Oficio:</label>
+                    <div class="scroll">
+                        {% for oficio in form.oficios.field.choices %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="{{ oficio.0 }}" name="{{ form.oficios.html_name }}" value="{{ oficio.0 }}"
+                                    {% if oficio.0 in form.oficios.value %}checked{% endif %}>
+                                <label class="form-check-label" for="{{ oficio.0 }}">{{ oficio.1 }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% for error in form.oficios.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
-                <div class="form-group">
-                    <label for="{{ form.foto.id_for_label }}">Foto:</label>
-                    {{ form.foto }}
-                    {% if form.foto.value %}
-                        <img src="{{ form.foto.url }}" alt="Foto del trabajador">
-                    {% endif %}
-                    {% for error in form.foto.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
+            </div>
+    
+            {% if trabajador_exists %}
+            <div class="container text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="d-inline-block">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                    <div class="d-inline-block">
+                        <button type="reset" class="btn btn-secondary">Borrar formulario</button>
+                    </div>
                 </div>
             </div>
+            {% else %}
+            <div class="container text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="d-inline-block">
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </div>
+                    <div class="d-inline-block">
+                        <button type="reset" class="btn btn-secondary">Borrar formulario</button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
-
-        <div class="form-group">
-            <label for="{{ form.descripcion.id_for_label }}">Descripción:</label>
-            {{ form.descripcion }}
-            {% for error in form.descripcion.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        {% if trabajador_exists%}
-        <div class="container text-center">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <button type="reset" class="btn btn-secondary">Borrar formulario</button>
-        </div>
-        {% else %}
-        <div class="container text-center">
-            <button type="submit" class="btn btn-primary">Registrase</button>
-            <button type="reset" class="btn btn-secondary">Borrar formulario</button>
-        </div>
-        {% endif %}
     </form>
 </div>
+<style>
+    ul {
+        list-style: none;
+    }
+    .form-check-inline .form-check-input {
+    margin-right: 10px; /* Ajusta el espaciado entre los checkboxes y las etiquetas */
+}
+    .scroll { 
+    border:2px solid #ccc; 
+    width:100%; 
+    height: 300px; 
+    overflow-y: scroll; 
+    max-height: 200px; /* Ajusta según tus necesidades */
+    overflow-y: auto;
+    border: 1px solid #ced4da; /* Opcional: Agrega un borde al contenedor de desplazamiento */
+    padding: 5px; /* Opcional: Ajusta el espacio interno del contenedor de desplazamiento */
+    
+}
+
+.form-check {
+    display: flex; /* Utiliza el modelo de caja flexible */
+    align-items: center; /* Alinea verticalmente los elementos en el centro */
+}
+
+.form-check-input {
+    margin-right: 10px; /* Ajusta el espaciado entre los checkboxes y las etiquetas */
+}
+
+
+@media (max-width: 767px) {
+    /* Estilos para pantallas más pequeñas (por ejemplo, dispositivos móviles) */
+    .responsive-textarea {
+      width: 100%;
+      resize: vertical;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    /* Estilos para pantallas más grandes (por ejemplo, tabletas y escritorios) */
+    .responsive-textarea {
+      width: 100%;
+      resize: vertical;
+    }
+  }
+</style>
 {% endblock %}
