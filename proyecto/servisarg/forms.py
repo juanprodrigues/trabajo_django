@@ -39,7 +39,7 @@ class TrabajadorForm(forms.ModelForm):
         self.user = user  # Asignar el usuario a un atributo de la instancia del formulario
         self.initial['first_name'] = user.first_name
         self.initial['last_name'] = user.last_name
-        self.initial['foto'] = user.photo
+        # self.initial['foto'] = user.photo
         
     def save(self, commit=True, request=None):
         instance = super().save(commit=False)
@@ -53,8 +53,8 @@ class TrabajadorForm(forms.ModelForm):
         instance.last_login = user.last_login
         instance.usuario_id = user.id
         instance.password = user.last_login
-        if request is not None and 'foto' in request.FILES:
-            instance.foto = request.FILES['foto']
+        # if request is not None and 'foto' in request.FILES:
+        #     instance.foto = request.FILES['foto']
 
         if commit:
             instance.save()

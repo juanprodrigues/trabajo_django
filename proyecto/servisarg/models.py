@@ -40,7 +40,7 @@ class Trabajador(AbstractUser):
     )
     descripcion = models.TextField(max_length=700, verbose_name="Descripción")
     foto = models.ImageField(
-        upload_to='trabajador_photos/', blank=True, null=True)
+        upload_to='trabajador_photos', blank=True, null=True)
     groups = models.ManyToManyField(
         Group,
         verbose_name='groups',

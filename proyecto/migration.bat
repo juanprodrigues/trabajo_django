@@ -15,3 +15,21 @@ py manage.py migrate servisarg
 
 REM Pausa para ver los resultados
 pause
+
+
+
+REM Ejecutar general
+python manage.py makemigrations
+python manage.py migrate 
+
+REM Ejecutar makemigrations
+python manage.py makemigrations chat
+python manage.py makemigrations servisarg
+
+REM Ejecutar migrate
+
+python manage.py migrate chat
+python manage.py migrate servisarg
+
+REM Pausa para ver los resultados
+pause

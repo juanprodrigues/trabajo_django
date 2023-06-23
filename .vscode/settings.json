@@ -1,5 +1,6 @@
 {
     "python.analysis.typeCheckingMode": "off",
-    "html.autoClosingTags": true
+    "html.autoClosingTags": true,
+    "docwriter.style": "NumPy"
 
 }
